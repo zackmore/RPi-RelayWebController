@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>测试控制</title>
+        <link rel="stylesheet" href="js/jquery.mobile.structure-1.1.1.min.css">
+        <link rel="stylesheet" href="js/testlight.min.css">
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.mobile-1.1.1.min.js"></script>
+    </head>
+    <body>
+        <div data-role="page">
+            <header data-role="header" data-theme="a">
+                <h1>Test Light</h1>
+            </header>
+            <section data-role="content" data-theme="a">
+                <h2>Test Light:</h2>
+                <ul>
+                    <li>网络端控制硬件原型。</li>
+                    <li>使用jquery mobile/bottle.py搭建。</li>
+                    <li>遵循RESTful原则。</li>
+                </ul>
+                <p>*硬件必备：服务器，继电器。</p>
+                <label for="switch">灯泡开关：</label>
+                <select name="switch" id="switch" data-role="slider">
+                    <option value="0">关</option>
+                    <option value="1">开</option>
+                </select>
+            </section>
+            <footer data-role="footer">
+                <h2>开关测试</h2>
+            </footer>
+        </div>
+        <script>
+            $(document).bind('pageinit', function(){
+                $('#switch').ajaxStart(function(){
+                    $.mobile.showPageLoadingMsg();
+                }).ajaxStop(function(){
+                    $.mobile.hidePageLoadingMsg();
+                }).change(function(e){
+                    var status = $(this).val();
+                    $.ajax({
+                        url: '/light',
+                        type: 'put',
+                        data: {'switchTo': status},
+                        success: function(data){
+                            console.log(data);
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
